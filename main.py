@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+from utils import  *
 
 class MainHandler:
 
@@ -9,7 +10,6 @@ class MainHandler:
     @property
     def folder(self):
         return self.__folder
-
 
     def timer(self):
         return datetime.now().strftime('%H.%M.%S')
@@ -34,18 +34,7 @@ if __name__ == "__main__":
     folder = Path.home() / "Downloads"
     filehandler = MainHandler(folder)
 
-    file_signature = {
-        0x1: "docx",
-        0x2: "pdf",
-        0x3: "txt",
-        0x4: "py",
-    }
 
-    img_signature = {
-        0x1: b"\xff\xd8\xff",
-        0x2: b"\x89PNG",
-        0x3: b"typavif",
-    }
 
     while True:
         try:
@@ -60,7 +49,7 @@ if __name__ == "__main__":
                 )
             )
 
-            if signature_asc == 0b1:
+            if signature_asc & 0b1:
                 txt_asc = int(
                     input(
                         """
@@ -74,7 +63,7 @@ if __name__ == "__main__":
                 create_folder_file.mkdir(exist_ok=True)
                 filehandler.txt_sorter()
 
-            elif signature_asc == 0b10:
+            elif signature_asc & 0b10:
                 img_asc = int(
                     input(
                         """
@@ -88,7 +77,7 @@ if __name__ == "__main__":
                 create_folder_img.mkdir(exist_ok=True)
                 filehandler.img_sorter()
 
-            elif signature_asc == 0b11:
+            elif signature_asc & 0b11:
                 print("bye!")
                 break
             else:
